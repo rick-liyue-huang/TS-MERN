@@ -1,8 +1,15 @@
 import express, { Request, Response, NextFunction } from 'express';
+import morgan from 'morgan';
 import { BlogModel } from './models/blog';
 import { blogRouter } from './routes/blogs';
 
 export const app = express();
+
+//
+app.use(morgan('dev'));
+
+// parse the request body
+app.use(express.json());
 
 // on the dedicated path, return the response
 app.use('/api/blogs', blogRouter);

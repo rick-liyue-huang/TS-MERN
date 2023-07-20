@@ -1,6 +1,13 @@
 import express from 'express';
-import { getAllBlogsController } from '../controllers/blogs';
+import {
+  createNewBlogController,
+  getAllBlogsController,
+  getSingleBlogController,
+} from '../controllers/blogs';
 
 export const blogRouter = express.Router();
 
-blogRouter.get('/', getAllBlogsController);
+blogRouter
+  .get('/', getAllBlogsController)
+  .get('/:blogId', getSingleBlogController)
+  .post('/', createNewBlogController);
