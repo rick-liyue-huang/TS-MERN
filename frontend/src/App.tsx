@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import { IBlog } from './models/blogs';
+import BlogComponent from './components/Blog';
+import { Container, Row, Col } from 'react-bootstrap';
+import styles from './pages/BlogPage.module.css';
 
 function App() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
@@ -25,7 +28,17 @@ function App() {
     fetchBlogs();
   }, []);
 
-  return <div className="App">{JSON.stringify(blogs)}</div>;
+  return (
+    <Container className="App">
+      <Row xs={1} md={2} xl={3} className="g-3">
+        {blogs.map((blog) => (
+          <Col key={blog._id}>
+            <BlogComponent blog={blog} className={styles.blog} />
+          </Col>
+        ))}
+      </Row>
+    </Container>
+  );
 }
 
 export default App;

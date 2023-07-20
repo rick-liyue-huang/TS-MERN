@@ -1,0 +1,12 @@
+.blogCard {
+  background-color: rgb(242, 241, 240);
+}
+
+.blogText {
+  white-space: pre-line;
+}
+
+.cardBody {
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, #000 60%, transparent);
+}
