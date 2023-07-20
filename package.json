@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "",
+    "build": "tsc ./backend/dist/server.js",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --write .",
     "prepare": "husky install"
