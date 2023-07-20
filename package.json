@@ -6,7 +6,9 @@
     "build": "tsc ./backend/dist/server.js",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "install-server": "cd backend && yarn add",
+    "dev-server": "cd backend && yarn dev"
   },
   "engines": {
     "node": ">=14.0.0",
