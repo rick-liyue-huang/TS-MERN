@@ -20,7 +20,8 @@ app.use((req, res, next) => {
 });
 
 // error handling middleware
-app.use((error: unknown, req: Request, res: Response) => {
+// eslint-disable-next-line no-unused-vars
+app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(error);
   let errorMsg = 'Internal server error';
   if (error instanceof Error) {
