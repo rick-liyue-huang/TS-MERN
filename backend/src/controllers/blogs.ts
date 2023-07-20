@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import mongoose from 'mongoose';
 import { BlogModel } from '../models/blog';
+import createHttpError from 'http-errors';
+
+interface CreateBlogBody {
+  title?: string;
+  text?: string;
+}
 
 export const getAllBlogsController: RequestHandler = async (
   req: Request,
@@ -23,12 +29,12 @@ export const getSingleBlogController: RequestHandler = async (
 ) => {
   const { blogId } = req.params;
   try {
-    if (!mongoose.Types.ObjectId.isValid(blogId)) {
-      throw new Error('Blog id is required');
+    if (!mongoose.isValidObjectId(blogId)) {
+      throw createHttpError(400, 'Blog id is required');
     }
     const blog = await BlogModel.findById(blogId).exec();
     if (!blog) {
-      throw new Error('Blog not found');
+      throw createHttpError(404, 'Blog not found');
     }
     res.status(200).json(blog);
   } catch (error) {
@@ -36,16 +42,17 @@ export const getSingleBlogController: RequestHandler = async (
   }
 };
 
-export const createNewBlogController: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
+export const createNewBlogController: RequestHandler<
+  unknown,
+  unknown,
+  CreateBlogBody,
+  unknown
+> = async (req, res, next) => {
   const { title, text } = req.body;
 
   try {
     if (!title) {
-      throw new Error('Title is required');
+      throw createHttpError(400, 'Title is required');
     }
     const newBlog = await BlogModel.create({ title, text });
     res.status(201).json(newBlog);
