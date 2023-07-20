@@ -1,10 +1,25 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import morgan from 'morgan';
 import createHttpError, { isHttpError } from 'http-errors';
 import { BlogModel } from './models/blog';
 import { blogRouter } from './routes/blogs';
 
+const whitelist = ['http://localhost:3000'];
+
+const corsOptions = {
+  origin: function (origin: any, callback: any) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
 export const app = express();
+
+app.use(cors(corsOptions));
 
 //
 app.use(morgan('dev'));
