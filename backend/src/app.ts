@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 // error handling middleware
-app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+app.use((error: unknown, req: Request, res: Response) => {
   console.error(error);
   let errorMsg = 'Internal server error';
   if (error instanceof Error) {
