@@ -1,18 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { BlogModel } from './models/blog';
+import { blogRouter } from './routes/blogs';
 
 export const app = express();
 
-// on the root path, return all the blogs
-app.get('/', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // throw new Error('Oops!');
-    const blogs = await BlogModel.find().exec();
-    res.status(200).json(blogs);
-  } catch (error) {
-    next(error);
-  }
-});
+// on the dedicated path, return the response
+app.use('/api/blogs', blogRouter);
 
 // on the other paths, return 404
 app.use((req, res, next) => {
