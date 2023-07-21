@@ -3,7 +3,7 @@ import * as BlogApi from './api/api_blogs';
 import { FaPlus } from 'react-icons/fa';
 import { IBlog } from './models/blogs';
 import BlogComponent from './components/Blog';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import styles from './pages/BlogPage.module.css';
 import UtilsStyles from './styles/utils.module.css';
 import AddOrEditBlogDialog from './components/AddOrEditBlogDialog';
@@ -12,6 +12,10 @@ function App() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
   const [showAddBlogDialog, setShowAddBlogDialog] = useState(false);
   const [blogBeEdit, setBlogBeEdit] = useState<IBlog | null>(null);
+
+  const [blogLoading, setBlogLoading] = useState<boolean>(true);
+  const [showBlogLoadingError, setShowBlogLoadingError] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -26,11 +30,17 @@ function App() {
         const blogs = await res.json();
          */
 
+        setShowBlogLoadingError(false);
+        setBlogLoading(true);
+
         const blogs = await BlogApi.fetchBlogs();
         setBlogs(blogs);
       } catch (error) {
         console.error(error);
-        alert(error);
+        // alert(error);
+        setShowBlogLoadingError(true);
+      } finally {
+        setBlogLoading(false);
       }
     };
     fetchBlogs();
@@ -48,8 +58,23 @@ function App() {
     }
   };
 
+  const content = (
+    <Row xs={1} md={2} xl={3} className={`${styles.blogGrid} g-3`}>
+      {blogs.map((blog) => (
+        <Col key={blog._id}>
+          <BlogComponent
+            blog={blog}
+            className={styles.blog}
+            onClickToDelete={deleteBlog}
+            onBlogClick={(blog) => setBlogBeEdit(blog)}
+          />
+        </Col>
+      ))}
+    </Row>
+  );
+
   return (
-    <Container>
+    <Container className={styles.blogPage}>
       <Button
         className={`${UtilsStyles.blogCenter} my-3 ${UtilsStyles.flexCenter}`}
         onClick={() => setShowAddBlogDialog(true)}
@@ -57,19 +82,22 @@ function App() {
         <FaPlus />
         Add Blog
       </Button>
-      <Row xs={1} md={2} xl={3} className="g-3">
-        {blogs.map((blog) => (
-          <Col key={blog._id}>
-            <BlogComponent
-              blog={blog}
-              className={styles.blog}
-              onClickToDelete={deleteBlog}
-              onBlogClick={(blog) => setBlogBeEdit(blog)}
-            />
-          </Col>
-        ))}
-      </Row>
-
+      {
+        // if blogLoading is true, then show loading
+        blogLoading && <Spinner animation="border" variant="primary" />
+      }
+      {
+        // if showBlogLoadingError is true, then show error
+        showBlogLoadingError && <div>Something wrong on fetching blogs...</div>
+      }
+      {!blogLoading && !showBlogLoadingError && (
+        <>
+          {
+            // if blogs.length is 0, then show no blogs
+            blogs.length > 0 ? content : <div>No blogs</div>
+          }
+        </>
+      )}
       {showAddBlogDialog && (
         <AddOrEditBlogDialog
           onDismiss={() => setShowAddBlogDialog(false)}

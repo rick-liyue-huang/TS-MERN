@@ -10,3 +10,13 @@
     rgba(0, 0, 0, 0.06) 0px 6px 24px 0px,
     rgba(0, 0, 0, 0.09) 0px 0px 0px 1px;
 }
+
+.blogPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.blogGrid {
+  width: 100%;
+}
