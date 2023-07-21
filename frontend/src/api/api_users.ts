@@ -1,15 +1,15 @@
 import { IUser } from '../models/users';
 import { fetchData } from './api_blogs';
 
-interface SignupCredentials {
+export interface SignUpCredentials {
   username: string;
   email: string;
-  password: string;
+  rawPassword: string;
 }
 
-interface SigninCredentials {
+export interface SignInCredentials {
   username: string;
-  password: string;
+  rawPassword: string;
 }
 
 // match the backend route for user authentication method
@@ -20,7 +20,7 @@ export async function getSigninedUser(): Promise<IUser> {
   return response.json();
 }
 
-export async function signUp(credential: SignupCredentials): Promise<IUser> {
+export async function signUp(credential: SignUpCredentials): Promise<IUser> {
   const response = await fetchData(`http://localhost:4000/api/users/sign-up`, {
     method: 'POST',
     headers: {
@@ -32,7 +32,7 @@ export async function signUp(credential: SignupCredentials): Promise<IUser> {
   return response.json();
 }
 
-export async function signIn(credential: SigninCredentials): Promise<IUser> {
+export async function signIn(credential: SignInCredentials): Promise<IUser> {
   const response = await fetchData(`http://localhost:4000/api/users/sign-in`, {
     method: 'POST',
     headers: {

@@ -4,6 +4,7 @@ import { IBlog } from '../models/blogs';
 import { useForm } from 'react-hook-form';
 import { IBlogInput } from '../api/api_blogs';
 import * as BlogApi from '../api/api_blogs';
+import TextInputFields from './form/TextInputFields';
 
 export interface AddOrEditBlogDialogProps {
   onDismiss: () => void;
@@ -52,19 +53,27 @@ export default function AddOrEditBlogDialog({
 
       <Modal.Body>
         <Form id="addEditBlogForm" onSubmit={handleSubmit(onSubmit)}>
-          <Form.Group className="mb-3">
-            <Form.Label>Title</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter title"
-              isInvalid={!!errors.title}
-              {...register('title', { required: 'Title Required' })}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.title?.message}
-            </Form.Control.Feedback>
-          </Form.Group>
+          <TextInputFields
+            name="title"
+            label="Title"
+            type="text"
+            placeholder="Enter title"
+            register={register}
+            registerOptions={{ required: 'Title Required' }}
+            error={errors.title}
+          />
 
+          <TextInputFields
+            name="text"
+            label="Content"
+            as="textarea"
+            placeholder="Enter Content"
+            register={register}
+            registerOptions={{ required: 'Content Required' }}
+            error={errors.text}
+          />
+
+          {/*
           <Form.Group className="mb-3">
             <Form.Label>Text</Form.Label>
             <Form.Control
@@ -73,7 +82,7 @@ export default function AddOrEditBlogDialog({
               placeholder="Enter content of blog"
               {...register('text')}
             />
-          </Form.Group>
+          </Form.Group> */}
         </Form>
       </Modal.Body>
       <Modal.Footer>

@@ -3,10 +3,13 @@ import * as BlogApi from './api/api_blogs';
 import { FaPlus } from 'react-icons/fa';
 import { IBlog } from './models/blogs';
 import BlogComponent from './components/Blog';
-import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Nav } from 'react-bootstrap';
 import styles from './pages/BlogPage.module.css';
 import UtilsStyles from './styles/utils.module.css';
 import AddOrEditBlogDialog from './components/AddOrEditBlogDialog';
+import SignUpUserDialog from './components/SignUpUserDialog';
+import SignInUserDialog from './components/SignInUserDialog';
+import NavBar from './components/Navbar';
 
 function App() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
@@ -74,55 +77,70 @@ function App() {
   );
 
   return (
-    <Container className={styles.blogPage}>
-      <Button
-        className={`${UtilsStyles.blogCenter} my-3 ${UtilsStyles.flexCenter}`}
-        onClick={() => setShowAddBlogDialog(true)}
-      >
-        <FaPlus />
-        Add Blog
-      </Button>
-      {
-        // if blogLoading is true, then show loading
-        blogLoading && <Spinner animation="border" variant="primary" />
-      }
-      {
-        // if showBlogLoadingError is true, then show error
-        showBlogLoadingError && <div>Something wrong on fetching blogs...</div>
-      }
-      {!blogLoading && !showBlogLoadingError && (
-        <>
-          {
-            // if blogs.length is 0, then show no blogs
-            blogs.length > 0 ? content : <div>No blogs</div>
-          }
-        </>
-      )}
-      {showAddBlogDialog && (
-        <AddOrEditBlogDialog
-          onDismiss={() => setShowAddBlogDialog(false)}
-          onBlogSaved={(newBlog) => {
-            setBlogs([...blogs, newBlog]);
-            setShowAddBlogDialog(false);
-          }}
-        />
-      )}
-      {
-        // if blogBeEdit is not null, then we are editing a blog
-        blogBeEdit && (
+    <>
+      <NavBar
+        signInedUser={null}
+        onSignInClick={() => {}}
+        onSignOutClick={() => {}}
+        onSignUpClick={() => {}}
+      />
+      <Container className={styles.blogPage}>
+        <Button
+          className={`${UtilsStyles.blogCenter} my-3 ${UtilsStyles.flexCenter}`}
+          onClick={() => setShowAddBlogDialog(true)}
+        >
+          <FaPlus />
+          Add Blog
+        </Button>
+        {
+          // if blogLoading is true, then show loading
+          blogLoading && <Spinner animation="border" variant="primary" />
+        }
+        {
+          // if showBlogLoadingError is true, then show error
+          showBlogLoadingError && (
+            <div>Something wrong on fetching blogs...</div>
+          )
+        }
+        {!blogLoading && !showBlogLoadingError && (
+          <>
+            {
+              // if blogs.length is 0, then show no blogs
+              blogs.length > 0 ? content : <div>No blogs</div>
+            }
+          </>
+        )}
+        {showAddBlogDialog && (
           <AddOrEditBlogDialog
-            blogBeEdit={blogBeEdit}
-            onDismiss={() => setBlogBeEdit(null)}
-            onBlogSaved={(updatedBlog) => {
-              setBlogs(
-                blogs.map((b) => (b._id === updatedBlog._id ? updatedBlog : b))
-              );
-              setBlogBeEdit(null);
+            onDismiss={() => setShowAddBlogDialog(false)}
+            onBlogSaved={(newBlog) => {
+              setBlogs([...blogs, newBlog]);
+              setShowAddBlogDialog(false);
             }}
           />
-        )
-      }
-    </Container>
+        )}
+        {
+          // if blogBeEdit is not null, then we are editing a blog
+          blogBeEdit && (
+            <AddOrEditBlogDialog
+              blogBeEdit={blogBeEdit}
+              onDismiss={() => setBlogBeEdit(null)}
+              onBlogSaved={(updatedBlog) => {
+                setBlogs(
+                  blogs.map((b) =>
+                    b._id === updatedBlog._id ? updatedBlog : b
+                  )
+                );
+                setBlogBeEdit(null);
+              }}
+            />
+          )
+        }
+
+        {false && <SignUpUserDialog onDismiss={() => {}} onSignUp={() => {}} />}
+        {false && <SignInUserDialog onDismiss={() => {}} onSignIn={() => {}} />}
+      </Container>
+    </>
   );
 }
 
