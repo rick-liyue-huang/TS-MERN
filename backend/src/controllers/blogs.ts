@@ -27,7 +27,7 @@ export const getAllBlogsController: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    // throw new Error('Oops!');
+    // throw createHttpError(401);
     const blogs = await BlogModel.find().exec();
     res.status(200).json(blogs);
   } catch (error) {

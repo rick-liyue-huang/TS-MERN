@@ -51,5 +51,5 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     errorMsg = error.message;
   }
 
-  res.status(statusCode).json({ error: errorMsg });
+  res.status(statusCode).json({ error: errorMsg }); // match with api_blogs in frontend
 });
