@@ -36,3 +36,27 @@ export async function createBlog(blog: IBlogInput): Promise<IBlog> {
 
   return response.json();
 }
+
+export async function updateBlog(
+  blogId: string,
+  blog: IBlogInput
+): Promise<IBlog> {
+  const response = await fetchData(
+    `http://localhost:4000/api/blogs/${blogId}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(blog),
+    }
+  );
+  return response.json();
+}
+
+export async function deleteBlog(blogId: string): Promise<void> {
+  await fetchData(`http://localhost:4000/api/blogs/${blogId}`, {
+    method: 'DELETE',
+  });
+  // return response.json();
+}

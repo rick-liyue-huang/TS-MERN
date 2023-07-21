@@ -5,25 +5,39 @@ import { useForm } from 'react-hook-form';
 import { IBlogInput } from '../api/api_blogs';
 import * as BlogApi from '../api/api_blogs';
 
-interface AddBlogDialogProps {
+export interface AddOrEditBlogDialogProps {
   onDismiss: () => void;
   onBlogSaved: (blog: IBlog) => void;
+  blogBeEdit?: IBlog;
 }
 
-export default function AddBlogDialog({
+export default function AddOrEditBlogDialog({
   onDismiss,
   onBlogSaved,
-}: AddBlogDialogProps) {
+  blogBeEdit,
+}: AddOrEditBlogDialogProps) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IBlogInput>();
+  } = useForm<IBlogInput>({
+    defaultValues: {
+      title: blogBeEdit?.title ?? '',
+      text: blogBeEdit?.text ?? '',
+    },
+  });
 
   async function onSubmit(blogInput: IBlogInput) {
     try {
-      const blogRes = await BlogApi.createBlog(blogInput);
-      console.log('blogRes: ', blogRes);
+      // if blogBeEdit is not undefined, then we are editing a blog
+      let blogRes: IBlog;
+      if (blogBeEdit) {
+        blogRes = await BlogApi.updateBlog(blogBeEdit._id, blogInput);
+        console.log('EDIT blogRes: ', blogRes);
+      } else {
+        blogRes = await BlogApi.createBlog(blogInput);
+        console.log('CREATE blogRes: ', blogRes);
+      }
       onBlogSaved(blogRes);
     } catch (err) {
       console.error(err);
@@ -33,11 +47,11 @@ export default function AddBlogDialog({
   return (
     <Modal show onHide={onDismiss}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Blog</Modal.Title>
+        <Modal.Title>{blogBeEdit ? 'Edit Blog' : 'Add Blog'}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <Form id="addBlogForm" onSubmit={handleSubmit(onSubmit)}>
+        <Form id="addEditBlogForm" onSubmit={handleSubmit(onSubmit)}>
           <Form.Group className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control
@@ -63,7 +77,7 @@ export default function AddBlogDialog({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <button type="submit" form="addBlogForm" disabled={isSubmitting}>
+        <button type="submit" form="addEditBlogForm" disabled={isSubmitting}>
           Save
         </button>
       </Modal.Footer>
