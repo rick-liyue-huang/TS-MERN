@@ -11,6 +11,6 @@ export const userRouter = express.Router();
 
 userRouter
   .get('/', getAuthenticatedUser)
-  .post('/signup', signUp)
-  .post('/signin', signIn)
-  .post('/signout', signOut);
+  .post('/sign-up', signUp)
+  .post('/sign-in', signIn)
+  .post('/sign-out', signOut);
